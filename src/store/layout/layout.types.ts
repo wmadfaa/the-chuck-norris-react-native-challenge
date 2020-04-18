@@ -1,4 +1,3 @@
-// Example for using discriminated union types.
 export type ThemeColors = 'light' | 'dark';
 
 export enum LayoutActionTypes {

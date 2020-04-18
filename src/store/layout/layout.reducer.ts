@@ -23,4 +23,4 @@ const reducer: Reducer<LayoutState, LayoutAction> = (
   }
 };
 
-export {reducer as layoutReducer};
+export {reducer as LayoutReducer};
