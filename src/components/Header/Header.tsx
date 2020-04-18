@@ -8,22 +8,31 @@ import {
   OverflowMenu,
   MenuItem,
 } from '@ui-kitten/components';
+import {useNavigation} from '@react-navigation/native';
 import {useDispatch, useSelector} from 'react-redux';
 import {ApplicationDispatch, ApplicationState} from '../../store';
 import {ThemeColors, setThemeAction} from '../../store/layout';
 
-interface HeaderProps {}
+interface HeaderProps {
+  title: string;
+  canGoBack?: boolean;
+}
 
 const MenuIcon = (props: IconProps) => <Icon {...props} name="more-vertical" />;
 
 const InfoIcon = (props: IconProps) => <Icon {...props} name="info" />;
+
+const renderBackIcon = (props: IconProps) => (
+  <Icon {...props} name="arrow-back" />
+);
 
 const ThemeColorIcon = (color: ThemeColors) => (props: IconProps) => {
   const iconName = color === 'light' ? 'sun-outline' : 'moon-outline';
   return <Icon {...props} name={iconName} />;
 };
 
-const Header: React.FC<HeaderProps> = () => {
+const Header: React.FC<HeaderProps> = ({title, canGoBack}) => {
+  const navigation = useNavigation();
   const [menuVisible, setMenuVisible] = React.useState(false);
   const {
     layout: {theme},
@@ -39,8 +48,14 @@ const Header: React.FC<HeaderProps> = () => {
   };
 
   const renderMenuAction = () => (
-    <TopNavigationAction icon={MenuIcon} onPress={toggleMenu} />
+    <TopNavigationAction
+      onPressIn={() => navigation.goBack()}
+      icon={MenuIcon}
+      onPress={toggleMenu}
+    />
   );
+
+  const BackAction = () => <TopNavigationAction icon={renderBackIcon} />;
 
   const renderSettingsAction = () => {
     const nextThemeColor: ThemeColors = theme === 'light' ? 'dark' : 'light';
@@ -62,7 +77,11 @@ const Header: React.FC<HeaderProps> = () => {
 
   return (
     <>
-      <TopNavigation title="add Emails" accessoryRight={renderSettingsAction} />
+      <TopNavigation
+        title={title}
+        accessoryRight={canGoBack ? renderSettingsAction : undefined}
+        accessoryLeft={BackAction}
+      />
       <Divider />
     </>
   );

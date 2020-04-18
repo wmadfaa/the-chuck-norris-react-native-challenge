@@ -9,10 +9,14 @@ import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
-import {Card, Text} from '@ui-kitten/components';
+import {Card, Text, Button, Icon, IconProps} from '@ui-kitten/components';
 
 interface HomeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.HOME> {}
+
+const SendIcon = (props: IconProps) => (
+  <Icon {...props} name="paper-plane-outline" />
+);
 
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const dispatch = useDispatch<ApplicationDispatch>();
@@ -47,7 +51,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
 
   return (
     <ScreenContainer>
-      <Header />
+      <Header title="add friends emails" canGoBack />
       <SearchAnFilterBar
         textContentType="emailAddress"
         autoCompleteType="email"
@@ -74,6 +78,9 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       ) : (
         <FriendsList friends={friendsData} />
       )}
+      <Button style={{margin: 8}} status="primary" accessoryLeft={SendIcon}>
+        Send Jokes
+      </Button>
     </ScreenContainer>
   );
 };

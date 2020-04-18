@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet} from 'react-native';
+import {StyleSheet, View} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {Icon, ListItem, CheckBox, Button} from '@ui-kitten/components';
 import {useDispatch} from 'react-redux';
@@ -38,28 +38,33 @@ const FriendsListItem: React.FC<Friend> = ({email, id, selected}) => {
   };
 
   return (
-    <Swipeable
-      ref={swipeableRef}
-      friction={2}
-      leftThreshold={80}
-      rightThreshold={40}
-      renderRightActions={renderRightActions}>
-      <ListItem
-        onPress={onListItemActiveCheckedChange}
-        title={email}
-        accessoryLeft={(props) => <Icon {...props} name="person" />}
-        accessoryRight={() => (
-          <CheckBox
-            checked={selected}
-            onChange={onListItemActiveCheckedChange}
-          />
-        )}
-      />
-    </Swipeable>
+    <View style={styles.root}>
+      <Swipeable
+        ref={swipeableRef}
+        friction={2}
+        leftThreshold={80}
+        rightThreshold={40}
+        renderRightActions={renderRightActions}>
+        <ListItem
+          onPress={onListItemActiveCheckedChange}
+          title={email}
+          accessoryLeft={(props) => <Icon {...props} name="person" />}
+          accessoryRight={() => (
+            <CheckBox
+              checked={selected}
+              onChange={onListItemActiveCheckedChange}
+            />
+          )}
+        />
+      </Swipeable>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  root: {
+    marginVertical: 4,
+  },
   deleteBtn: {
     borderRadius: 0,
   },
