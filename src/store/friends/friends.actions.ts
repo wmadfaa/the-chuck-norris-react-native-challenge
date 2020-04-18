@@ -15,6 +15,9 @@ export const addFriendAction = (email: Friend['email']) => {
 export const removeFriendAction = (id: Friend['id']) =>
   action(FriendsActionTypes.REMOVE_FRIEND, id);
 
+export const removeAllFriendsAction = () =>
+  action(FriendsActionTypes.REMOVE_ALL_FRIENDS);
+
 export const updateFriendAction = (
   id: Friend['id'],
   selected: Friend['selected'],

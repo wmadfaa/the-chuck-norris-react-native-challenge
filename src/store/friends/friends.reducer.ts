@@ -13,13 +13,16 @@ const reducer: Reducer<FriendsState, FriendsAction> = (
 ) => {
   switch (action.type) {
     case FriendsActionTypes.ADD_FRIEND: {
-      return Array.from(new Set([...state, action.payload]));
+      return [...state, action.payload];
     }
     case FriendsActionTypes.REMOVE_FRIEND: {
       return state.filter(({id}) => id !== action.payload);
     }
+    case FriendsActionTypes.REMOVE_ALL_FRIENDS: {
+      return [];
+    }
     case FriendsActionTypes.UPDATE_FRIEND: {
-      const nextFriends = state;
+      const nextFriends = [...state];
 
       for (let i in nextFriends) {
         if (nextFriends[i].id == action.payload.id) {

@@ -1,18 +1,17 @@
 import React from 'react';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {
-  Button,
   Divider,
   Icon,
   IconProps,
   List,
   ListItem,
-  ListItemProps,
   TopNavigation,
   TopNavigationAction,
   Layout,
   OverflowMenu,
   MenuItem,
+  CheckBox,
 } from '@ui-kitten/components';
 import {useDispatch, useSelector} from 'react-redux';
 
@@ -24,6 +23,8 @@ import {ApplicationDispatch, ApplicationState} from 'src/store';
 import {ThemeColors, setThemeAction} from '../../store/layout';
 
 import styles from './Home.styles';
+import {Friend} from '../../store/friends/friends.types';
+import {updateFriendAction} from '../../store/friends/friends.actions';
 
 interface HomeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.HOME> {}
@@ -37,15 +38,13 @@ const ThemeColorIcon = (color: ThemeColors) => (props: IconProps) => {
   return <Icon {...props} name={iconName} />;
 };
 
-const data = new Array(8).fill({
-  title: 'Title for Item',
-  description: 'Description for Item',
-});
-
 const HomeScreen: React.FC<HomeScreenProps> = () => {
   const edgeInsets = useSafeArea();
   const [menuVisible, setMenuVisible] = React.useState(false);
-  const {theme} = useSelector((state: ApplicationState) => state.layout);
+  const {
+    layout: {theme},
+    friends,
+  } = useSelector((state: ApplicationState) => state);
   const dispatch = useDispatch<ApplicationDispatch>();
 
   const setTheme = (color: ThemeColors) => () => {
@@ -77,20 +76,29 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       </OverflowMenu>
     );
   };
-  const renderItemAccessory = () => <Button size="tiny">FOLLOW</Button>;
 
-  const renderItemIcon = (props: IconProps) => (
-    <Icon {...props} name="person" />
-  );
+  const onListItemActiveCheckedChange = (
+    id: Friend['id'],
+    selected: Friend['selected'],
+  ) => () => {
+    dispatch(updateFriendAction(id, selected));
+  };
 
-  const renderItem = ({item, index}: {item: ListItemProps; index: number}) => (
-    <ListItem
-      title={`${item.title} ${index + 1}`}
-      description={`${item.description} ${index + 1}`}
-      accessoryLeft={renderItemIcon}
-      accessoryRight={renderItemAccessory}
-    />
-  );
+  const renderItem = ({item}: {item: Friend}) => {
+    return (
+      <ListItem
+        onPress={onListItemActiveCheckedChange(item.id, !item.selected)}
+        title={item.email}
+        accessoryLeft={(props) => <Icon {...props} name="person" />}
+        accessoryRight={() => (
+          <CheckBox
+            checked={item.selected}
+            onChange={onListItemActiveCheckedChange(item.id, !item.selected)}
+          />
+        )}
+      />
+    );
+  };
 
   return (
     <Layout
@@ -105,7 +113,7 @@ const HomeScreen: React.FC<HomeScreenProps> = () => {
       ]}>
       <TopNavigation title="add Emails" accessoryRight={renderSettingsAction} />
       <Divider />
-      <List style={styles.container} data={data} renderItem={renderItem} />
+      <List style={styles.container} data={friends} renderItem={renderItem} />
     </Layout>
   );
 };
