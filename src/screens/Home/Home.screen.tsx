@@ -1,5 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
+import {Card, Text, Button, Icon, IconProps} from '@ui-kitten/components';
+import {validate} from 'validate.js';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {addFriendAction} from '../../store/friends/friends.actions';
 import {MainStackParams} from '../../app/navigators';
@@ -9,7 +11,6 @@ import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
-import {Card, Text, Button, Icon, IconProps} from '@ui-kitten/components';
 
 interface HomeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.HOME> {}
@@ -18,13 +19,20 @@ const SendIcon = (props: IconProps) => (
   <Icon {...props} name="paper-plane-outline" />
 );
 
+interface SearchAndFilterInput {
+  value: string;
+  error?: string;
+}
+
 const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
   const {selectedJokeId} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
   const {friends} = useSelector((state: ApplicationState) => state);
-  const [searchAndFilterInputValue, setSearchAndFilterInputValue] = useState(
-    '',
-  );
+  const [searchAndFilterInput, setSearchAndFilterInput] = useState<
+    SearchAndFilterInput
+  >({
+    value: '',
+  });
   const [friendsData, setFriendsData] = useState([...friends]);
 
   useEffect(() => {
@@ -36,23 +44,39 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
   };
 
   const handleOnSearchAnFilterInputChange = (val: string) => {
-    setSearchAndFilterInputValue(val.toLowerCase());
+    setSearchAndFilterInput({value: val.toLowerCase()});
     filterFriendsData(val.toLowerCase());
   };
   const handleClearSearchInput = () => {
-    setSearchAndFilterInputValue('');
+    setSearchAndFilterInput({value: ''});
     setFriendsData([...friends]);
   };
+
   const onAddBtnClick = () => {
-    if (searchAndFilterInputValue && friendsData.length == 0) {
-      handleClearSearchInput();
-      dispatch(addFriendAction(searchAndFilterInputValue));
+    if (searchAndFilterInput && friendsData.length == 0) {
+      const validationResult = validate(
+        {[searchAndFilterInput.value]: searchAndFilterInput},
+        {
+          [searchAndFilterInput.value]: {
+            email: true,
+          },
+        },
+      );
+      if (!validationResult) {
+        handleClearSearchInput();
+        dispatch(addFriendAction(searchAndFilterInput.value));
+      } else {
+        setSearchAndFilterInput((prev) => ({
+          ...prev,
+          error: validationResult[prev.value][0],
+        }));
+      }
     }
   };
 
   return (
     <ScreenContainer>
-      <Header title="add friends emails" canGoBack />
+      <Header title="add & select friends emails" canGoBack />
       <SearchAnFilterBar
         textContentType="emailAddress"
         autoCompleteType="email"
@@ -60,7 +84,9 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
         returnKeyType="go"
         autoCapitalize="none"
         autoCorrect={false}
-        value={searchAndFilterInputValue}
+        status={searchAndFilterInput.error ? 'danger' : 'basic'}
+        value={searchAndFilterInput.value}
+        caption={searchAndFilterInput.error}
         onChangeText={handleOnSearchAnFilterInputChange}
         handleClearSearchInput={handleClearSearchInput}
         onAddBtnClick={onAddBtnClick}
@@ -68,10 +94,10 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
       />
       {friends.length != 0 &&
       friendsData.length == 0 &&
-      !!searchAndFilterInputValue ? (
+      !!searchAndFilterInput ? (
         <Card status="info" style={{margin: 16}}>
           <Text category="p1">
-            <Text category="label">{searchAndFilterInputValue}</Text> is not in
+            <Text category="label">{searchAndFilterInput.value}</Text> is not in
             your friends list yet! {'\n'}
             you can add it by clicking on the add new friend button.
           </Text>
