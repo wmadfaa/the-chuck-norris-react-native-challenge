@@ -1,6 +1,7 @@
 import {Reducer} from 'redux';
 import {ActionType} from 'typesafe-actions';
 import {JokesState, JokesActionTypes} from './jokes.types';
+import uniqBy from 'lodash.uniqby';
 
 export type JokesAction = ActionType<typeof import('./jokes.actions')>;
 
@@ -24,7 +25,7 @@ const reducer: Reducer<JokesState, JokesAction> = (
     case JokesActionTypes.FETCH_RANDOM_JOKES_SUCCESS: {
       return {
         ...state,
-        jokes: [...state.jokes, ...action.payload],
+        jokes: uniqBy([...state.jokes, ...action.payload], 'id'),
         isLoading: false,
       };
     }

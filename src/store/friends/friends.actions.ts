@@ -1,11 +1,11 @@
 import {action} from 'typesafe-actions';
-import {v5 as uuid} from 'uuid';
+import {v4 as uuid} from 'uuid';
 
 import {FriendsActionTypes, Friend} from './friends.types';
 
 export const addFriendAction = (email: Friend['email']) => {
   const friend: Friend = {
-    id: uuid(email, uuid.DNS),
+    id: uuid(),
     email,
     selected: true,
   };
