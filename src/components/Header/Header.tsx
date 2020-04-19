@@ -48,14 +48,15 @@ const Header: React.FC<HeaderProps> = ({title, canGoBack}) => {
   };
 
   const renderMenuAction = () => (
-    <TopNavigationAction
-      onPressIn={() => navigation.goBack()}
-      icon={MenuIcon}
-      onPress={toggleMenu}
-    />
+    <TopNavigationAction icon={MenuIcon} onPress={toggleMenu} />
   );
 
-  const BackAction = () => <TopNavigationAction icon={renderBackIcon} />;
+  const BackAction = () => (
+    <TopNavigationAction
+      icon={renderBackIcon}
+      onPress={() => navigation.goBack()}
+    />
+  );
 
   const renderSettingsAction = () => {
     const nextThemeColor: ThemeColors = theme === 'light' ? 'dark' : 'light';
@@ -79,8 +80,8 @@ const Header: React.FC<HeaderProps> = ({title, canGoBack}) => {
     <>
       <TopNavigation
         title={title}
-        accessoryRight={canGoBack ? renderSettingsAction : undefined}
-        accessoryLeft={BackAction}
+        accessoryRight={renderSettingsAction}
+        accessoryLeft={canGoBack ? BackAction : undefined}
       />
       <Divider />
     </>
