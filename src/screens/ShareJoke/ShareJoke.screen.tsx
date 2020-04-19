@@ -18,6 +18,7 @@ import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
+import BlurOverlay from '../../components/BlurOverlay/BlurOverlay';
 
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
@@ -86,44 +87,47 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const onSortBtnClick = () => {};
 
   return (
-    <ScreenContainer>
-      <Header title="share joke" canGoBack />
-      <SearchAnFilterBar
-        textContentType="emailAddress"
-        autoCompleteType="email"
-        keyboardType="email-address"
-        returnKeyType="go"
-        autoCapitalize="none"
-        autoCorrect={false}
-        status={searchAndFilterInput.error ? 'danger' : 'basic'}
-        value={searchAndFilterInput.value}
-        caption={searchAndFilterInput.error}
-        onChangeText={handleOnSearchAnFilterInputChange}
-        handleClearSearchInput={handleClearSearchInput}
-        onAddBtnClick={onAddBtnClick}
-        onSubmitEditing={onAddBtnClick}
-        onFilterBtnClick={onFilterBtnClick}
-        onSortBtnClick={onSortBtnClick}
-      />
-      {friends.length != 0 &&
-      friendsData.length == 0 &&
-      !!searchAndFilterInput ? (
-        <Layout style={{flex: 1, alignSelf: 'stretch'}}>
-          <Card status="info" style={{margin: 16}}>
-            <Text category="p1">
-              <Text category="label">{searchAndFilterInput.value}</Text> is not
-              in your friends list yet! {'\n'}
-              you can add it by clicking on the add new friend button.
-            </Text>
-          </Card>
-        </Layout>
-      ) : (
-        <FriendsList friends={friendsData} />
-      )}
-      <Button style={{margin: 8}} status="primary" accessoryLeft={SendIcon}>
-        Send Jokes
-      </Button>
-    </ScreenContainer>
+    <>
+      <ScreenContainer>
+        <Header title="share joke" canGoBack />
+        <SearchAnFilterBar
+          textContentType="emailAddress"
+          autoCompleteType="email"
+          keyboardType="email-address"
+          returnKeyType="go"
+          autoCapitalize="none"
+          autoCorrect={false}
+          status={searchAndFilterInput.error ? 'danger' : 'basic'}
+          value={searchAndFilterInput.value}
+          caption={searchAndFilterInput.error}
+          onChangeText={handleOnSearchAnFilterInputChange}
+          handleClearSearchInput={handleClearSearchInput}
+          onAddBtnClick={onAddBtnClick}
+          onSubmitEditing={onAddBtnClick}
+          onFilterBtnClick={onFilterBtnClick}
+          onSortBtnClick={onSortBtnClick}
+        />
+        {friends.length != 0 &&
+        friendsData.length == 0 &&
+        !!searchAndFilterInput ? (
+          <Layout style={{flex: 1, alignSelf: 'stretch'}}>
+            <Card status="info" style={{margin: 16}}>
+              <Text category="p1">
+                <Text category="label">{searchAndFilterInput.value}</Text> is
+                not in your friends list yet! {'\n'}
+                you can add it by clicking on the add new friend button.
+              </Text>
+            </Card>
+          </Layout>
+        ) : (
+          <FriendsList friends={friendsData} />
+        )}
+        <Button style={{margin: 8}} status="primary" accessoryLeft={SendIcon}>
+          Send Jokes
+        </Button>
+      </ScreenContainer>
+      <BlurOverlay />
+    </>
   );
 };
 
