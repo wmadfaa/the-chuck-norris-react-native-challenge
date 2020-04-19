@@ -1,6 +1,13 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {Card, Text, Button, Icon, IconProps} from '@ui-kitten/components';
+import {
+  Card,
+  Text,
+  Button,
+  Icon,
+  IconProps,
+  Layout,
+} from '@ui-kitten/components';
 import {validate} from 'validate.js';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {addFriendAction} from '../../store/friends/friends.actions';
@@ -12,8 +19,8 @@ import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
 
-interface HomeScreenProps
-  extends ScreenNavigationProp<MainStackParams, ROUTES.HOME> {}
+interface ShareJokeScreenProps
+  extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
 
 const SendIcon = (props: IconProps) => (
   <Icon {...props} name="paper-plane-outline" />
@@ -24,7 +31,7 @@ interface SearchAndFilterInput {
   error?: string;
 }
 
-const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
+const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const {selectedJokeId} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
   const {friends} = useSelector((state: ApplicationState) => state);
@@ -74,9 +81,13 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
     }
   };
 
+  const onFilterBtnClick = () => {};
+
+  const onSortBtnClick = () => {};
+
   return (
     <ScreenContainer>
-      <Header title="add & select friends emails" canGoBack />
+      <Header title="share joke" canGoBack />
       <SearchAnFilterBar
         textContentType="emailAddress"
         autoCompleteType="email"
@@ -91,17 +102,21 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
         handleClearSearchInput={handleClearSearchInput}
         onAddBtnClick={onAddBtnClick}
         onSubmitEditing={onAddBtnClick}
+        onFilterBtnClick={onFilterBtnClick}
+        onSortBtnClick={onSortBtnClick}
       />
       {friends.length != 0 &&
       friendsData.length == 0 &&
       !!searchAndFilterInput ? (
-        <Card status="info" style={{margin: 16}}>
-          <Text category="p1">
-            <Text category="label">{searchAndFilterInput.value}</Text> is not in
-            your friends list yet! {'\n'}
-            you can add it by clicking on the add new friend button.
-          </Text>
-        </Card>
+        <Layout style={{flex: 1, alignSelf: 'stretch'}}>
+          <Card status="info" style={{margin: 16}}>
+            <Text category="p1">
+              <Text category="label">{searchAndFilterInput.value}</Text> is not
+              in your friends list yet! {'\n'}
+              you can add it by clicking on the add new friend button.
+            </Text>
+          </Card>
+        </Layout>
       ) : (
         <FriendsList friends={friendsData} />
       )}
@@ -112,4 +127,4 @@ const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
   );
 };
 
-export default HomeScreen;
+export default ShareJokeScreen;

@@ -33,7 +33,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   };
 
   const handleOnShareJoke = (jokeId: Joke['id']) => {
-    navigation.navigate(ROUTES.HOME, {selectedJokeId: jokeId});
+    navigation.navigate(ROUTES.SHARE_JOKE, {selectedJokeId: jokeId});
   };
 
   const handleOnActiveJokeChanged = (jokeId: Joke['id']) => {

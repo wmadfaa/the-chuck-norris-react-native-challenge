@@ -16,15 +16,27 @@ export interface SearchAnFilterBarProps
   extends Omit<InputProps, 'accessoryRight' | 'placeholder'> {
   handleClearSearchInput(): void;
   onAddBtnClick(): void;
+  onFilterBtnClick(): void;
+  onSortBtnClick(): void;
 }
 
 const AddIcon = (props: IconProps) => (
   <Icon {...props} name="person-add-outline" />
 );
 
+const FilterIcon = (props: IconProps) => (
+  <Icon {...props} name="funnel-outline" />
+);
+
+const SortIcon = (props: IconProps) => (
+  <Icon {...props} name="options-2-outline" />
+);
+
 const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
   handleClearSearchInput,
   onAddBtnClick,
+  onFilterBtnClick,
+  onSortBtnClick,
   style,
   ...props
 }) => {
@@ -35,8 +47,8 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
   );
 
   return (
-    <Layout>
-      <Layout style={styles.root}>
+    <Layout style={styles.root}>
+      <Layout style={styles.searchContainer}>
         <Input
           {...props}
           style={[style, styles.searchInput]}
@@ -44,12 +56,30 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
           accessoryRight={props.value ? renderClearSearchInput : undefined}
         />
         <Button
-          style={styles.btn}
+          style={styles.addBtn}
           status="basic"
           size="small"
           accessoryLeft={AddIcon}
           onPress={onAddBtnClick}
         />
+      </Layout>
+      <Layout style={styles.filterAndOrderContainer}>
+        <Button
+          style={[styles.btn, styles.filterBtn]}
+          status="basic"
+          size="small"
+          accessoryLeft={FilterIcon}
+          onPress={onFilterBtnClick}>
+          Filter
+        </Button>
+        <Button
+          style={styles.btn}
+          status="basic"
+          size="small"
+          accessoryLeft={SortIcon}
+          onPress={onSortBtnClick}>
+          sort by
+        </Button>
       </Layout>
       <Divider />
     </Layout>

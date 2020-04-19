@@ -1,6 +1,6 @@
 enum ROUTES {
   PICK_JOKE = '@main/pick-joke',
-  HOME = '@main/home',
+  SHARE_JOKE = '@main/share-joke',
 }
 
 export default ROUTES;
