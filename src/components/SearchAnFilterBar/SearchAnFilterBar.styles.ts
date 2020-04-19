@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import {StyleSheet, Platform} from 'react-native';
 
 export default StyleSheet.create({
   root: {
@@ -15,7 +15,7 @@ export default StyleSheet.create({
     marginHorizontal: -4,
   },
   addBtn: {
-    height: 40,
+    height: Platform.OS == 'ios' ? 40 : 43.8,
     borderTopLeftRadius: 0,
     borderBottomLeftRadius: 0,
   },

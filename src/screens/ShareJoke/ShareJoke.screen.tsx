@@ -18,7 +18,7 @@ import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
-import BlurOverlay from '../../components/BlurOverlay/BlurOverlay';
+import FilterOrSortModal from '../../components/FilterOrSortModal/FilterOrSortModal';
 
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
@@ -32,6 +32,11 @@ interface SearchAndFilterInput {
   error?: string;
 }
 
+interface ShareJokeScreenState {
+  showFilterModal: boolean;
+  showSortModal: boolean;
+}
+
 const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const {selectedJokeId} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
@@ -42,6 +47,12 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     value: '',
   });
   const [friendsData, setFriendsData] = useState([...friends]);
+  const [state, setState] = useState<ShareJokeScreenState>({
+    showFilterModal: false,
+    showSortModal: false,
+  });
+  const [selectedFilterValue, setSelectedFilterValue] = useState<string>();
+  const [selectedSortValue, setSelectedSortValue] = useState<string>();
 
   useEffect(() => {
     setFriendsData([...friends]);
@@ -82,9 +93,17 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     }
   };
 
-  const onFilterBtnClick = () => {};
+  const handleToggleFilterModulePreview = () => {
+    setState((prev) => ({...prev, showFilterModal: !prev.showFilterModal}));
+  };
 
-  const onSortBtnClick = () => {};
+  const handleToggleSortModulePreview = () => {
+    setState((prev) => ({...prev, showSortModal: !prev.showSortModal}));
+  };
+
+  const handleSort = () => {};
+
+  const handleFilter = () => {};
 
   return (
     <>
@@ -104,8 +123,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           handleClearSearchInput={handleClearSearchInput}
           onAddBtnClick={onAddBtnClick}
           onSubmitEditing={onAddBtnClick}
-          onFilterBtnClick={onFilterBtnClick}
-          onSortBtnClick={onSortBtnClick}
+          onFilterBtnClick={handleToggleFilterModulePreview}
+          onSortBtnClick={handleToggleSortModulePreview}
         />
         {friends.length != 0 &&
         friendsData.length == 0 &&
@@ -126,7 +145,32 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           Send Jokes
         </Button>
       </ScreenContainer>
-      <BlurOverlay />
+      {state.showFilterModal && (
+        <FilterOrSortModal
+          onClose={handleToggleFilterModulePreview}
+          title="Filter E-mails"
+          options={['filter unselected emails', 'filter selected emails']}
+          secondaryActionButtonLabel="Reset"
+          primaryActionButtonLabel="Apply"
+          onSecondaryActionButtonPress={() => {}}
+          onPrimaryActionButtonPress={handleFilter}
+          selectedValue={selectedFilterValue}
+          onSelectedValueChange={setSelectedFilterValue}
+        />
+      )}
+      {state.showSortModal && (
+        <FilterOrSortModal
+          onClose={handleToggleSortModulePreview}
+          title="Sort E-mails"
+          options={['sort by email domain name', 'sort by emails host name']}
+          secondaryActionButtonLabel="Reset"
+          primaryActionButtonLabel="Apply"
+          onSecondaryActionButtonPress={() => {}}
+          onPrimaryActionButtonPress={handleSort}
+          selectedValue={selectedSortValue}
+          onSelectedValueChange={setSelectedSortValue}
+        />
+      )}
     </>
   );
 };

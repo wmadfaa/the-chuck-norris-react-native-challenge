@@ -23,7 +23,7 @@ const BlurOverlay: React.FC<VibrancyViewProperties | BlurViewProperties> = ({
         </VibrancyView>
       ) : (
         <View style={styles.blurContainer}>
-          <BlurView {...props} style={StyleSheet.absoluteFill}>
+          <BlurView {...props} style={[StyleSheet.absoluteFill]}>
             {children}
           </BlurView>
         </View>
