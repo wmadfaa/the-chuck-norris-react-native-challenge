@@ -1,8 +1,8 @@
-import React, {useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
 import {Text, Button, IconProps, Icon} from '@ui-kitten/components';
 import {ApplicationState, ApplicationDispatch} from '../../store';
-import {fetchRandomJokesActionAsync} from '../../store/jokes/jokes.actions';
+import {fetchRandomJokesActionAsync, Joke} from '../../store/jokes';
 import {MainStackParams} from '../../app/navigators';
 import ScreenContainer from '../../containers/ScreenContainer';
 import {ScreenNavigationProp} from '../../utils/ScreenProps';
@@ -18,6 +18,9 @@ const SendIcon = (props: IconProps) => <Icon {...props} name="share-outline" />;
 const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch<ApplicationDispatch>();
   const {jokes} = useSelector((state: ApplicationState) => state);
+  const [activeJoke, setActiveJoke] = useState<Joke['id']>('');
+
+  console.log(jokes);
 
   useEffect(() => {
     if (jokes.jokes.length == 0) {
@@ -27,6 +30,14 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
 
   const handleLoadMoreJokes = () => {
     dispatch(fetchRandomJokesActionAsync.request());
+  };
+
+  const handleOnShareJoke = (jokeId: Joke['id']) => {
+    navigation.navigate(ROUTES.HOME, {selectedJokeId: jokeId});
+  };
+
+  const handleOnActiveJokeChanged = (jokeId: Joke['id']) => {
+    setActiveJoke(jokeId);
   };
 
   return (
@@ -40,13 +51,16 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
           jokes={[...jokes.jokes]}
           onEndRetched={handleLoadMoreJokes}
           loading={jokes.isLoading}
+          onSelect={handleOnShareJoke}
+          onChange={handleOnActiveJokeChanged}
         />
       )}
       <Button
+        disabled={!activeJoke}
         style={{margin: 8}}
         status="primary"
         accessoryLeft={SendIcon}
-        onPress={() => navigation.navigate(ROUTES.HOME)}>
+        onPress={() => handleOnShareJoke(activeJoke)}>
         Share
       </Button>
     </ScreenContainer>

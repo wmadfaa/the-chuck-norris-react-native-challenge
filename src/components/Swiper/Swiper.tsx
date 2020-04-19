@@ -74,6 +74,8 @@ export interface SwiperProps {
   jokes: Joke[];
   onEndRetched(): void;
   loading?: boolean;
+  onSelect(jokeId: string): void;
+  onChange(activeJokeId: string): void;
 }
 
 interface SwiperState {
@@ -118,6 +120,12 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
     );
 
     this.init();
+  }
+
+  componentDidMount() {
+    if (this.state.jokes.length > 0) {
+      this.props.onChange(this.state.jokes[0].id);
+    }
   }
 
   init = () => {
@@ -197,6 +205,7 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
       this.init();
       this.endRetched();
     }
+    this.props.onChange(this.state.jokes[0].id);
   };
 
   endRetched = () => {
@@ -251,7 +260,11 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
               onHandlerStateChange={onGestureEvent}
               {...{onGestureEvent}}>
               <Animated.View {...{style}}>
-                <SwiperCard joke={lastJokes} {...{likeOpacity, nopeOpacity}} />
+                <SwiperCard
+                  joke={lastJokes}
+                  {...{likeOpacity, nopeOpacity}}
+                  onPress={this.props.onSelect}
+                />
               </Animated.View>
             </PanGestureHandler>
           </Layout>

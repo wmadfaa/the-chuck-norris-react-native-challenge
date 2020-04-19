@@ -6,9 +6,10 @@ import ROUTES from '../configs/routes';
 // screens
 import HomeScreen from '../screens/Home/Home.screen';
 import PickJokeScreen from '../screens/PickJoke/PickJoke.screen';
+import {Joke} from '../store/jokes/jokes.types';
 
 export type MainStackParams = {
-  [ROUTES.HOME]: undefined;
+  [ROUTES.HOME]: {selectedJokeId: Joke['id']};
   [ROUTES.PICK_JOKE]: undefined;
 };
 

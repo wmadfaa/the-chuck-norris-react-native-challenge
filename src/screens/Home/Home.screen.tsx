@@ -18,7 +18,8 @@ const SendIcon = (props: IconProps) => (
   <Icon {...props} name="paper-plane-outline" />
 );
 
-const HomeScreen: React.FC<HomeScreenProps> = () => {
+const HomeScreen: React.FC<HomeScreenProps> = ({route}) => {
+  const {selectedJokeId} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
   const {friends} = useSelector((state: ApplicationState) => state);
   const [searchAndFilterInputValue, setSearchAndFilterInputValue] = useState(
