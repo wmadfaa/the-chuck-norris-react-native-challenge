@@ -1,44 +1,57 @@
-import React from 'react';
-import { MainStackParams } from '../../app/navigators';
+import React, {useEffect} from 'react';
+import {useDispatch, useSelector} from 'react-redux';
+import {ApplicationState, ApplicationDispatch} from '../../store';
+import {fetchRandomJokesActionAsync} from '../../store/jokes/jokes.actions';
+import {MainStackParams} from '../../app/navigators';
 import ScreenContainer from '../../containers/ScreenContainer';
-import { ScreenNavigationProp } from '../../utils/ScreenProps';
+import {ScreenNavigationProp} from '../../utils/ScreenProps';
 import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
-import { Profile } from '../../components/Swiper/SwiperCard';
+import {Profile} from '../../components/Swiper/SwiperCard';
 import Swiper from '../../components/Swiper/Swiper';
 
-interface PickJokeScreenProps extends ScreenNavigationProp<MainStackParams, ROUTES.PICK_JOKE> {}
+interface PickJokeScreenProps
+  extends ScreenNavigationProp<MainStackParams, ROUTES.PICK_JOKE> {}
 
 const profiles: Profile[] = [
-	{
-		id: '1',
-		name: 'Caroline',
-		age: 24
-	},
-	{
-		id: '2',
-		name: 'Jack',
-		age: 30
-	},
-	{
-		id: '3',
-		name: 'Anet',
-		age: 21
-	},
-	{
-		id: '4',
-		name: 'John',
-		age: 28
-	}
+  {
+    id: '1',
+    name: 'Caroline',
+    age: 24,
+  },
+  {
+    id: '2',
+    name: 'Jack',
+    age: 30,
+  },
+  {
+    id: '3',
+    name: 'Anet',
+    age: 21,
+  },
+  {
+    id: '4',
+    name: 'John',
+    age: 28,
+  },
 ];
 
 const PickJokeScreen: React.FC<PickJokeScreenProps> = () => {
-	return (
-		<ScreenContainer>
-			<Header title="pick Joke" />
-			<Swiper {...{ profiles }} />
-		</ScreenContainer>
-	);
+  const dispatch = useDispatch<ApplicationDispatch>();
+  const {jokes} = useSelector((state: ApplicationState) => state);
+
+  console.log(jokes);
+
+  useEffect(() => {
+    dispatch(fetchRandomJokesActionAsync.request());
+  }, []);
+
+  return (
+    <ScreenContainer>
+      <Header title="pick Joke" />
+      <Swiper {...{profiles}} />
+    </ScreenContainer>
+  );
 };
 
 export default PickJokeScreen;
