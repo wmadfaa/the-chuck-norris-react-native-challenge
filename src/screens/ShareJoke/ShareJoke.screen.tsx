@@ -17,6 +17,8 @@ import FilterModal, {FilterOptions} from './components/FilterModal/FilterModal';
 import {
   sortFriendsByEmailDomainName,
   sortFriendsByEmailHostName,
+  filterSelectedFriends,
+  filterUnselectedFriends,
 } from '../../utils/helpers';
 
 interface ShareJokeScreenProps
@@ -35,8 +37,8 @@ interface ShareJokeScreenState {
   showFilterModal: boolean;
   showSortModal: boolean;
   friendsData: Friend[];
-  filterValue?: string;
-  sortValue?: string;
+  filterValue: string;
+  sortValue: string;
   searchAndFilterInput: SearchAndFilterInput;
 }
 
@@ -49,6 +51,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     showFilterModal: false,
     showSortModal: false,
     friendsData: [...friends],
+    filterValue: '',
+    sortValue: '',
     searchAndFilterInput: {
       value: '',
     },
@@ -124,18 +128,18 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   };
 
   const handleSort = () => {
-    let sortedFriendsData: Friend[];
+    let friendsData = state.filterValue ? state.friendsData : [...friends];
+
+    let sortedFriendsData: Friend[] = friendsData;
+
     switch (state.sortValue) {
       case SortOptions.SORT_BY_EMAIL_DOMAIN: {
-        sortedFriendsData = sortFriendsByEmailDomainName([...friends]);
+        sortedFriendsData = sortFriendsByEmailDomainName(friendsData);
         break;
       }
       case SortOptions.SORT_BY_EMAIL_HOST: {
-        sortedFriendsData = sortFriendsByEmailHostName([...friends]);
+        sortedFriendsData = sortFriendsByEmailHostName(friendsData);
         break;
-      }
-      default: {
-        sortedFriendsData = [...friends];
       }
     }
     setState((prev) => ({
@@ -145,13 +149,37 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     }));
   };
 
-  const handleResetSort = () => {
-    setState((prev) => ({...prev, friendsData: [...friends]}));
+  const handleFilter = () => {
+    let friendsData =
+      state.filterValue || state.sortValue ? [...friends] : state.friendsData;
+    let filteredFriendsData: Friend[] = friendsData;
+
+    switch (state.filterValue) {
+      case FilterOptions.FILTER_SELECTED_EMAILS: {
+        filteredFriendsData = filterSelectedFriends(friendsData);
+        break;
+      }
+      case FilterOptions.FILTER_UNSELECTED_EMAILS: {
+        filteredFriendsData = filterUnselectedFriends(friendsData);
+        break;
+      }
+    }
+    setState((prev) => ({
+      ...prev,
+      friendsData: filteredFriendsData,
+      showFilterModal: false,
+    }));
   };
 
-  const handleFilter = () => {};
-
-  const handleResetFilter = () => {};
+  const handleResetFilter = () => {
+    console.log('on Reset');
+    setState((prev) => ({
+      ...prev,
+      friendsData: [...friends],
+      filterValue: '',
+      sortValue: '',
+    }));
+  };
 
   return (
     <>
@@ -173,6 +201,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           onSubmitEditing={onAddBtnClick}
           onFilterBtnClick={handleToggleFilterModulePreview}
           onSortBtnClick={handleToggleSortModulePreview}
+          filterBtnLabel={state.filterValue || 'Filter'}
+          sortByBtnLabel={state.sortValue || 'sort by'}
         />
         {friends.length != 0 &&
         state.friendsData.length == 0 &&
@@ -190,8 +220,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
       {state.showFilterModal && (
         <FilterModal
           onClose={handleToggleFilterModulePreview}
-          onReset={handleResetFilter}
           onApply={handleFilter}
+          onReset={handleResetFilter}
           onChange={handleOnFilterChange}
           selectedValue={state.filterValue}
         />
@@ -199,8 +229,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
       {state.showSortModal && (
         <SortModal
           onClose={handleToggleSortModulePreview}
-          onReset={handleResetSort}
           onApply={handleSort}
+          onReset={handleResetFilter}
           onChange={handleOnSortChange}
           selectedValue={state.sortValue}
         />

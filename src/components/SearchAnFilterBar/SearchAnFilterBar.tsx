@@ -7,6 +7,8 @@ import {
   InputProps,
   Button,
   Divider,
+  Text,
+  TextProps,
 } from '@ui-kitten/components';
 import {TouchableWithoutFeedback} from 'react-native';
 
@@ -18,6 +20,8 @@ export interface SearchAnFilterBarProps
   onAddBtnClick(): void;
   onFilterBtnClick(): void;
   onSortBtnClick(): void;
+  filterBtnLabel: string;
+  sortByBtnLabel: string;
 }
 
 const AddIcon = (props: IconProps) => (
@@ -32,11 +36,25 @@ const SortIcon = (props: IconProps) => (
   <Icon {...props} name="options-2-outline" />
 );
 
+const CustomBtn: React.FC<TextProps> = ({children, ...props}) => {
+  return (
+    <Text
+      {...props}
+      numberOfLines={1}
+      ellipsizeMode="tail"
+      style={[props.style, styles.customBtn]}>
+      {children}
+    </Text>
+  );
+};
+
 const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
   handleClearSearchInput,
   onAddBtnClick,
   onFilterBtnClick,
   onSortBtnClick,
+  filterBtnLabel,
+  sortByBtnLabel,
   style,
   ...props
 }) => {
@@ -70,7 +88,7 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
           size="small"
           accessoryLeft={FilterIcon}
           onPress={onFilterBtnClick}>
-          Filter
+          {(props) => <CustomBtn {...props}>{filterBtnLabel}</CustomBtn>}
         </Button>
         <Button
           style={styles.btn}
@@ -78,7 +96,7 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
           size="small"
           accessoryLeft={SortIcon}
           onPress={onSortBtnClick}>
-          sort by
+          {(props) => <CustomBtn {...props}>{sortByBtnLabel}</CustomBtn>}
         </Button>
       </Layout>
       <Divider />

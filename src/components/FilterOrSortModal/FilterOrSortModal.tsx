@@ -1,11 +1,11 @@
 import React from 'react';
 import {Text, Button, Layout, RadioGroup, Radio} from '@ui-kitten/components';
-import BlurOverlay from '../BlurOverlay/BlurOverlay';
+import BlurOverlay from '../../components/BlurOverlay/BlurOverlay';
 import {View, TouchableWithoutFeedback} from 'react-native';
 
 import styles from './FilterOrSortModal.styles';
 
-export interface FilterOrSortModalProps {
+export interface FilterModalProps {
   title: string;
   options: string[];
   secondaryActionButtonLabel: string;
@@ -17,7 +17,7 @@ export interface FilterOrSortModalProps {
   onClose(): void;
 }
 
-const FilterOrSortModal: React.FC<FilterOrSortModalProps> = ({
+const FilterModal: React.FC<FilterModalProps> = ({
   onClose,
   title,
   options,
@@ -66,4 +66,4 @@ const FilterOrSortModal: React.FC<FilterOrSortModalProps> = ({
   );
 };
 
-export default FilterOrSortModal;
+export default FilterModal;

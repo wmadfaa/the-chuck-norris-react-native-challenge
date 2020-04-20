@@ -21,9 +21,9 @@ export default StyleSheet.create({
   },
   filterBtn: {
     flexGrow: 1,
-    flexShrink: 1,
   },
   btn: {
+    flexShrink: 1,
     marginHorizontal: 4,
     justifyContent: 'flex-start',
   },
@@ -31,5 +31,8 @@ export default StyleSheet.create({
     flexGrow: 1,
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
+  },
+  customBtn: {
+    maxWidth: '75%',
   },
 });
