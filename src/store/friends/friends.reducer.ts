@@ -1,5 +1,6 @@
 import {Reducer} from 'redux';
 import {ActionType} from 'typesafe-actions';
+import filter from 'lodash.filter';
 import * as FriendsActions from './friends.actions';
 import {FriendsState, FriendsActionTypes} from './friends.types';
 
@@ -16,7 +17,7 @@ const reducer: Reducer<FriendsState, FriendsAction> = (
       return [...state, action.payload];
     }
     case FriendsActionTypes.REMOVE_FRIEND: {
-      return state.filter(({id}) => id !== action.payload);
+      return filter([...state], ({id}) => id !== action.payload);
     }
     case FriendsActionTypes.REMOVE_ALL_FRIENDS: {
       return [];

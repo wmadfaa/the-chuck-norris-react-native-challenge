@@ -79,6 +79,7 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
           style={styles.addBtn}
           status="basic"
           size="small"
+          disabled={!props.value}
           accessoryLeft={AddIcon}
           onPress={onAddBtnClick}
         />

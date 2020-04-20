@@ -1,8 +1,12 @@
 import {StyleSheet} from 'react-native';
 
 export default StyleSheet.create({
+  infos: {
+    paddingHorizontal: 16,
+    paddingVertical: 16,
+  },
   title: {
-    padding: 16,
+    marginBottom: 8,
   },
   shareBtn: {
     margin: 8,

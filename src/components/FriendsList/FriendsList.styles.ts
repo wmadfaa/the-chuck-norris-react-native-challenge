@@ -14,4 +14,8 @@ export default StyleSheet.create({
     flexGrow: 1,
     paddingVertical: 8,
   },
+  info: {
+    paddingVertical: 4,
+    textAlign: 'center',
+  },
 });

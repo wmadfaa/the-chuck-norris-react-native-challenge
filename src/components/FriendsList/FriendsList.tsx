@@ -12,9 +12,12 @@ const FriendsList: React.FC<FriendsListProps> = ({friends}) => {
   return (
     <Layout style={styles.root} level="2">
       <Layout style={styles.caption} level="3">
-        <Text category="c2">Friends list</Text>
+        <Text category="c1">Friends list</Text>
         <Divider />
       </Layout>
+      <Text category="c2" style={styles.info}>
+        swipe the e-mails to left to delete
+      </Text>
       <List
         style={styles.list}
         data={friends}

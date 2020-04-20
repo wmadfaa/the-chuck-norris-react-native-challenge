@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from 'react';
 import {useDispatch, useSelector} from 'react-redux';
-import {Text, Button, IconProps, Icon} from '@ui-kitten/components';
+import {Text, Button, IconProps, Icon, Layout} from '@ui-kitten/components';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {fetchRandomJokesActionAsync, Joke} from '../../store/jokes';
 import {MainStackParams} from '../../app/navigators';
@@ -37,9 +37,14 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   return (
     <ScreenContainer>
       <Header title="pick Joke" canGoBack={false} />
-      <Text category="h6" style={styles.title}>
-        Select a joke to share is with you friend
-      </Text>
+      <Layout level="2" style={styles.infos}>
+        <Text category="s1" style={styles.title}>
+          Select a joke to share is with you friend
+        </Text>
+        <Text category="c2" status="info">
+          swipe the jokes cards to left/right to select the next joke
+        </Text>
+      </Layout>
       {jokes.jokes.length > 0 && (
         <Swiper
           jokes={[...jokes.jokes]}

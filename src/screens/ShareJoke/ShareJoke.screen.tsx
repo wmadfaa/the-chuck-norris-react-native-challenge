@@ -3,6 +3,7 @@ import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Icon, IconProps, Spinner} from '@ui-kitten/components';
 import {validate} from 'validate.js';
+import filter from 'lodash.filter';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {addFriendAction, Friend} from '../../store/friends';
 import {MainStackParams} from '../../app/navigators';
@@ -80,7 +81,9 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const filterFriendsData = (query: string) => {
     setState((prev) => ({
       ...prev,
-      friendsData: friends.filter((friend) => friend.email.includes(query)),
+      friendsData: filter([...friends], (friend) =>
+        friend.email.substr(0, query.length).includes(query),
+      ),
     }));
   };
 
