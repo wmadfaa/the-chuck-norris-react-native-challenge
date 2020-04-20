@@ -237,6 +237,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           onSortBtnClick={handleToggleSortModulePreview}
           filterBtnLabel={state.filterValue || 'Filter'}
           sortByBtnLabel={state.sortValue || 'sort by'}
+          disableClearActions={!(state.filterValue || state.sortValue)}
+          onClearFilterClick={handleResetFilter}
         />
         {friends.length <= 0 ? (
           <EmptyFriendsListInfoCard />

@@ -11,7 +11,12 @@ export default StyleSheet.create({
   },
   filterAndOrderContainer: {
     flexDirection: 'row',
-    paddingVertical: 8,
+    paddingVertical: 4,
+    marginHorizontal: -4,
+  },
+  resetFilterContainer: {
+    paddingVertical: 4,
+    marginBottom: 4,
     marginHorizontal: -4,
   },
   addBtn: {

@@ -20,9 +20,11 @@ export interface SearchAnFilterBarProps
   onAddBtnClick(): void;
   onFilterBtnClick(): void;
   onSortBtnClick(): void;
+  onClearFilterClick(): void;
   filterBtnLabel: string;
   sortByBtnLabel: string;
   disableFilterAndSortActions?: boolean;
+  disableClearActions?: boolean;
 }
 
 const AddIcon = (props: IconProps) => (
@@ -54,9 +56,11 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
   onAddBtnClick,
   onFilterBtnClick,
   onSortBtnClick,
+  onClearFilterClick,
   filterBtnLabel,
   sortByBtnLabel,
   disableFilterAndSortActions,
+  disableClearActions,
   style,
   ...props
 }) => {
@@ -102,6 +106,15 @@ const SearchAnFilterBar: React.FC<SearchAnFilterBarProps> = ({
           accessoryLeft={SortIcon}
           onPress={onSortBtnClick}>
           {(props) => <CustomBtn {...props}>{sortByBtnLabel}</CustomBtn>}
+        </Button>
+      </Layout>
+      <Layout style={styles.resetFilterContainer}>
+        <Button
+          disabled={disableClearActions}
+          status="basic"
+          size="small"
+          onPress={onClearFilterClick}>
+          clear Filter & sort
         </Button>
       </Layout>
       <Divider />
