@@ -23,9 +23,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   const [activeJoke, setActiveJoke] = useState<Joke>();
 
   useEffect(() => {
-    if (jokes.jokes.length == 0) {
-      dispatch(fetchRandomJokesActionAsync.request());
-    }
+    dispatch(fetchRandomJokesActionAsync.request());
   }, []);
 
   const handleLoadMoreJokes = () => {

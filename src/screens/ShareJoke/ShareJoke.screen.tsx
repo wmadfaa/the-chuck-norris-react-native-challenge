@@ -3,7 +3,6 @@ import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
 import {Button, Icon, IconProps, Spinner} from '@ui-kitten/components';
 import {validate} from 'validate.js';
-import find from 'lodash.find';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {addFriendAction, Friend} from '../../store/friends';
 import {MainStackParams} from '../../app/navigators';
@@ -25,6 +24,7 @@ import {
 
 import styles from './ShareJoke.styles';
 import {sendJokeActionAsync} from '../../store/jokes/jokes.actions';
+import EmptyFriendsListInfoCard from './components/EmptyFriendsListInfoCard/EmptyFriendsListInfoCard';
 
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
@@ -48,6 +48,7 @@ interface ShareJokeScreenState {
   showFilterModal: boolean;
   showSortModal: boolean;
   friendsData: Friend[];
+  selectedFriends: Friend[];
   filterValue: string;
   sortValue: string;
   searchAndFilterInput: SearchAndFilterInput;
@@ -61,7 +62,8 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const [state, setState] = useState<ShareJokeScreenState>({
     showFilterModal: false,
     showSortModal: false,
-    friendsData: [...friends],
+    friendsData: [],
+    selectedFriends: [],
     filterValue: '',
     sortValue: '',
     searchAndFilterInput: {
@@ -70,7 +72,9 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   });
 
   useEffect(() => {
-    setState((prev) => ({...prev, friendsData: [...friends]}));
+    const friendsData = [...friends];
+    const selectedFriends = filterSelectedFriends(friendsData);
+    setState((prev) => ({...prev, selectedFriends, friendsData}));
   }, [friends]);
 
   const filterFriendsData = (query: string) => {
@@ -98,9 +102,11 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   };
 
   const onAddBtnClick = () => {
-    if (state.searchAndFilterInput && state.friendsData.length == 0) {
+    if (state.searchAndFilterInput.value && state.friendsData.length == 0) {
       const validationResult = validate(
-        {[state.searchAndFilterInput.value]: state.searchAndFilterInput},
+        {
+          [state.searchAndFilterInput.value]: state.searchAndFilterInput,
+        },
         {
           [state.searchAndFilterInput.value]: {
             email: true,
@@ -115,7 +121,7 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           ...prev,
           searchAndFilterInput: {
             ...prev.searchAndFilterInput,
-            error: validationResult[prev.searchAndFilterInput.value][0],
+            error: validationResult[state.searchAndFilterInput.value][0],
           },
         }));
       }
@@ -212,6 +218,7 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           returnKeyType="go"
           autoCapitalize="none"
           autoCorrect={false}
+          disableFilterAndSortActions={state.friendsData.length <= 1}
           status={state.searchAndFilterInput.error ? 'danger' : 'basic'}
           value={state.searchAndFilterInput.value}
           caption={state.searchAndFilterInput.error}
@@ -224,9 +231,9 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           filterBtnLabel={state.filterValue || 'Filter'}
           sortByBtnLabel={state.sortValue || 'sort by'}
         />
-        {friends.length != 0 &&
-        state.friendsData.length == 0 &&
-        !!state.searchAndFilterInput ? (
+        {friends.length <= 0 ? (
+          <EmptyFriendsListInfoCard />
+        ) : state.friendsData.length == 0 && !!state.searchAndFilterInput ? (
           <AddNewEmailInfoCard
             searchedEmail={state.searchAndFilterInput.value}
           />
@@ -236,7 +243,7 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
         <Button
           style={{margin: 8}}
           status="primary"
-          disabled={jokes.loading.sendJoke}
+          disabled={jokes.loading.sendJoke || state.selectedFriends.length == 0}
           onPress={handleSendJoke}
           accessoryLeft={jokes.loading.sendJoke ? LoadingIndicator : SendIcon}>
           {jokes.loading.sendJoke ? 'Send Joke' : 'Sending Joke'}
