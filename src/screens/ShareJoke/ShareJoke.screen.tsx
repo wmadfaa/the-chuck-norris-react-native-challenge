@@ -249,7 +249,7 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           disabled={jokes.loading.sendJoke || state.selectedFriends.length == 0}
           onPress={handleSendJoke}
           accessoryLeft={jokes.loading.sendJoke ? LoadingIndicator : SendIcon}>
-          {jokes.loading.sendJoke ? 'Send Joke' : 'Sending Joke'}
+          {!jokes.loading.sendJoke ? 'Send Joke' : 'Sending Joke'}
         </Button>
       </ScreenContainer>
       {state.showFilterModal && (
