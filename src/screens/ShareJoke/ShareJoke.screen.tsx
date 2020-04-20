@@ -162,9 +162,11 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
         break;
       }
     }
+
     setState((prev) => ({
       ...prev,
-      friendsData: sortedFriendsData,
+      friendsData:
+        sortedFriendsData.length > 0 ? sortedFriendsData : prev.friendsData,
       showSortModal: false,
     }));
   };
@@ -184,9 +186,11 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
         break;
       }
     }
+
     setState((prev) => ({
       ...prev,
-      friendsData: filteredFriendsData,
+      friendsData:
+        filteredFriendsData.length > 0 ? filteredFriendsData : prev.friendsData,
       showFilterModal: false,
     }));
   };
