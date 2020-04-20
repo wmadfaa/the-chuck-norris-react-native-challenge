@@ -8,6 +8,8 @@ import {
   BlurViewProperties,
 } from '@react-native-community/blur';
 
+import styles from './BlurOverlay.styles';
+
 const BlurOverlay: React.FC<VibrancyViewProperties | BlurViewProperties> = ({
   style,
   children,
@@ -31,19 +33,5 @@ const BlurOverlay: React.FC<VibrancyViewProperties | BlurViewProperties> = ({
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: 'transparent',
-  },
-  blurContainer: {
-    flex: 1,
-    backgroundColor: 'transparent',
-    justifyContent: 'center',
-    alignItems: 'stretch',
-    paddingHorizontal: 20,
-  },
-});
 
 export default BlurOverlay;

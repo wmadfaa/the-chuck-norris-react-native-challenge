@@ -1,5 +1,5 @@
 import React, {useRef} from 'react';
-import {StyleSheet, View} from 'react-native';
+import {View} from 'react-native';
 import Swipeable from 'react-native-gesture-handler/Swipeable';
 import {Icon, ListItem, CheckBox, Button} from '@ui-kitten/components';
 import {useDispatch} from 'react-redux';
@@ -9,6 +9,8 @@ import {
   removeFriendAction,
   Friend,
 } from '../../store/friends';
+
+import styles from './FriendsListItem.styles';
 
 const FriendsListItem: React.FC<Friend> = ({email, id, selected}) => {
   const swipeableRef = useRef<Swipeable>(null);
@@ -60,14 +62,5 @@ const FriendsListItem: React.FC<Friend> = ({email, id, selected}) => {
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  root: {
-    marginVertical: 4,
-  },
-  deleteBtn: {
-    borderRadius: 0,
-  },
-});
 
 export default FriendsListItem;

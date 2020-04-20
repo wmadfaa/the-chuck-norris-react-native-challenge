@@ -1,8 +1,10 @@
 import React from 'react';
 import {StyleSheet} from 'react-native';
 import Animated from 'react-native-reanimated';
-import {Joke} from '../../store/jokes';
 import {Card, Text, Layout} from '@ui-kitten/components';
+import {Joke} from '../../../store/jokes';
+
+import styles from './SwiperCard.styles';
 
 export interface SwiperCardProps {
   joke: Joke;
@@ -22,7 +24,7 @@ const SwiperCard: React.FC<SwiperCardProps> = ({joke, onPress}) => {
       <Card
         onPress={handleOnPress}
         disabled={!handleOnPress}
-        style={{flex: 1, alignItems: 'center', justifyContent: 'flex-start'}}>
+        style={styles.card}>
         <Text>{joke.joke}</Text>
       </Card>
     </Layout>

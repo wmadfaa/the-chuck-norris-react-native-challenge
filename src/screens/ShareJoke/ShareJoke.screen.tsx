@@ -1,24 +1,19 @@
 import React, {useState, useEffect} from 'react';
 import {useSelector, useDispatch} from 'react-redux';
-import {
-  Card,
-  Text,
-  Button,
-  Icon,
-  IconProps,
-  Layout,
-} from '@ui-kitten/components';
+import {Button, Icon, IconProps} from '@ui-kitten/components';
 import {validate} from 'validate.js';
 import {ApplicationState, ApplicationDispatch} from '../../store';
-import {addFriendAction} from '../../store/friends/friends.actions';
+import {addFriendAction, Friend} from '../../store/friends';
 import {MainStackParams} from '../../app/navigators';
-import ScreenContainer from '../../containers/ScreenContainer';
+import ScreenContainer from '../../containers/ScreenContainer/ScreenContainer';
 import {ScreenNavigationProp} from '../../utils/ScreenProps';
 import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
-import FilterOrSortModal from '../../components/FilterOrSortModal/FilterOrSortModal';
+import AddNewEmailInfoCard from './components/AddNewEmailInfoCard/AddNewEmailInfoCard';
+import FilterModal from './components/SortModal/FilterModal';
+import SortModal from './components/FilterModal/FilterModal';
 
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
@@ -35,59 +30,74 @@ interface SearchAndFilterInput {
 interface ShareJokeScreenState {
   showFilterModal: boolean;
   showSortModal: boolean;
+  friendsData: Friend[];
+  filterValue?: string;
+  sortValue?: string;
+  searchAndFilterInput: SearchAndFilterInput;
 }
 
 const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
   const {selectedJokeId} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
   const {friends} = useSelector((state: ApplicationState) => state);
-  const [searchAndFilterInput, setSearchAndFilterInput] = useState<
-    SearchAndFilterInput
-  >({
-    value: '',
-  });
-  const [friendsData, setFriendsData] = useState([...friends]);
+
   const [state, setState] = useState<ShareJokeScreenState>({
     showFilterModal: false,
     showSortModal: false,
+    friendsData: [...friends],
+    searchAndFilterInput: {
+      value: '',
+    },
   });
-  const [selectedFilterValue, setSelectedFilterValue] = useState<string>();
-  const [selectedSortValue, setSelectedSortValue] = useState<string>();
 
   useEffect(() => {
-    setFriendsData([...friends]);
+    setState((prev) => ({...prev, friendsData: [...friends]}));
   }, [friends]);
 
   const filterFriendsData = (query: string) => {
-    setFriendsData(friends.filter((friend) => friend.email.includes(query)));
+    setState((prev) => ({
+      ...prev,
+      friendsData: friends.filter((friend) => friend.email.includes(query)),
+    }));
   };
 
   const handleOnSearchAnFilterInputChange = (val: string) => {
-    setSearchAndFilterInput({value: val.toLowerCase()});
+    setState((prev) => ({
+      ...prev,
+      searchAndFilterInput: {value: val.toLowerCase()},
+    }));
+
     filterFriendsData(val.toLowerCase());
   };
+
   const handleClearSearchInput = () => {
-    setSearchAndFilterInput({value: ''});
-    setFriendsData([...friends]);
+    setState((prev) => ({
+      ...prev,
+      searchAndFilterInput: {value: ''},
+      friendsData: [...friends],
+    }));
   };
 
   const onAddBtnClick = () => {
-    if (searchAndFilterInput && friendsData.length == 0) {
+    if (state.searchAndFilterInput && state.friendsData.length == 0) {
       const validationResult = validate(
-        {[searchAndFilterInput.value]: searchAndFilterInput},
+        {[state.searchAndFilterInput.value]: state.searchAndFilterInput},
         {
-          [searchAndFilterInput.value]: {
+          [state.searchAndFilterInput.value]: {
             email: true,
           },
         },
       );
       if (!validationResult) {
         handleClearSearchInput();
-        dispatch(addFriendAction(searchAndFilterInput.value));
+        dispatch(addFriendAction(state.searchAndFilterInput.value));
       } else {
-        setSearchAndFilterInput((prev) => ({
+        setState((prev) => ({
           ...prev,
-          error: validationResult[prev.value][0],
+          searchAndFilterInput: {
+            ...prev.searchAndFilterInput,
+            error: validationResult[prev.searchAndFilterInput.value][0],
+          },
         }));
       }
     }
@@ -101,9 +111,21 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     setState((prev) => ({...prev, showSortModal: !prev.showSortModal}));
   };
 
+  const handleOnSortChange = (filterValue: string) => {
+    setState((prev) => ({...prev, filterValue}));
+  };
+
+  const handleOnFilterChange = (filterValue: string) => {
+    setState((prev) => ({...prev, filterValue}));
+  };
+
   const handleSort = () => {};
 
+  const handleResetSort = () => {};
+
   const handleFilter = () => {};
+
+  const handleResetFilter = () => {};
 
   return (
     <>
@@ -116,9 +138,9 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           returnKeyType="go"
           autoCapitalize="none"
           autoCorrect={false}
-          status={searchAndFilterInput.error ? 'danger' : 'basic'}
-          value={searchAndFilterInput.value}
-          caption={searchAndFilterInput.error}
+          status={state.searchAndFilterInput.error ? 'danger' : 'basic'}
+          value={state.searchAndFilterInput.value}
+          caption={state.searchAndFilterInput.error}
           onChangeText={handleOnSearchAnFilterInputChange}
           handleClearSearchInput={handleClearSearchInput}
           onAddBtnClick={onAddBtnClick}
@@ -127,48 +149,34 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
           onSortBtnClick={handleToggleSortModulePreview}
         />
         {friends.length != 0 &&
-        friendsData.length == 0 &&
-        !!searchAndFilterInput ? (
-          <Layout style={{flex: 1, alignSelf: 'stretch'}}>
-            <Card status="info" style={{margin: 16}}>
-              <Text category="p1">
-                <Text category="label">{searchAndFilterInput.value}</Text> is
-                not in your friends list yet! {'\n'}
-                you can add it by clicking on the add new friend button.
-              </Text>
-            </Card>
-          </Layout>
+        state.friendsData.length == 0 &&
+        !!state.searchAndFilterInput ? (
+          <AddNewEmailInfoCard
+            searchedEmail={state.searchAndFilterInput.value}
+          />
         ) : (
-          <FriendsList friends={friendsData} />
+          <FriendsList friends={state.friendsData} />
         )}
         <Button style={{margin: 8}} status="primary" accessoryLeft={SendIcon}>
           Send Jokes
         </Button>
       </ScreenContainer>
       {state.showFilterModal && (
-        <FilterOrSortModal
+        <FilterModal
           onClose={handleToggleFilterModulePreview}
-          title="Filter E-mails"
-          options={['filter unselected emails', 'filter selected emails']}
-          secondaryActionButtonLabel="Reset"
-          primaryActionButtonLabel="Apply"
-          onSecondaryActionButtonPress={() => {}}
-          onPrimaryActionButtonPress={handleFilter}
-          selectedValue={selectedFilterValue}
-          onSelectedValueChange={setSelectedFilterValue}
+          onReset={handleResetFilter}
+          onApply={handleFilter}
+          onChange={handleOnFilterChange}
+          selectedValue={state.filterValue}
         />
       )}
       {state.showSortModal && (
-        <FilterOrSortModal
+        <SortModal
           onClose={handleToggleSortModulePreview}
-          title="Sort E-mails"
-          options={['sort by email domain name', 'sort by emails host name']}
-          secondaryActionButtonLabel="Reset"
-          primaryActionButtonLabel="Apply"
-          onSecondaryActionButtonPress={() => {}}
-          onPrimaryActionButtonPress={handleSort}
-          selectedValue={selectedSortValue}
-          onSelectedValueChange={setSelectedSortValue}
+          onReset={handleResetSort}
+          onApply={handleSort}
+          onChange={handleOnSortChange}
+          selectedValue={state.sortValue}
         />
       )}
     </>

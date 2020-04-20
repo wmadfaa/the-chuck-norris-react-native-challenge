@@ -2,6 +2,8 @@ import React from 'react';
 import {useSafeArea} from 'react-native-safe-area-context';
 import {Layout, LayoutProps} from '@ui-kitten/components';
 
+import styles from './ScreenContainer.styles';
+
 interface ScreenContainerProps extends LayoutProps {}
 
 const ScreenContainer: React.FC<ScreenContainerProps> = ({
@@ -13,8 +15,8 @@ const ScreenContainer: React.FC<ScreenContainerProps> = ({
   return (
     <Layout
       style={[
+        styles.root,
         {
-          flex: 1,
           paddingTop: edgeInsets.top,
           paddingBottom: edgeInsets.bottom,
           paddingLeft: edgeInsets.left,

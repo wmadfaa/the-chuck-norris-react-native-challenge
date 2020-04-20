@@ -5,7 +5,7 @@ import {View, TouchableWithoutFeedback} from 'react-native';
 
 import styles from './FilterOrSortModal.styles';
 
-export interface FilterModalProps {
+export interface FilterOrSortModalProps {
   title: string;
   options: string[];
   secondaryActionButtonLabel: string;
@@ -17,7 +17,7 @@ export interface FilterModalProps {
   onClose(): void;
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({
+const FilterOrSortModal: React.FC<FilterOrSortModalProps> = ({
   onClose,
   title,
   options,
@@ -66,4 +66,4 @@ const FilterModal: React.FC<FilterModalProps> = ({
   );
 };
 
-export default FilterModal;
+export default FilterOrSortModal;

@@ -3,8 +3,10 @@ import {StyleSheet, Dimensions, ViewStyle, StyleProp} from 'react-native';
 import {Layout, Spinner, Text} from '@ui-kitten/components';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
-import SwiperCard from './SwiperCard';
+import SwiperCard from './SwiperCard/SwiperCard';
 import {Joke} from '../../store/jokes/jokes.types';
+
+import styles from './Swiper.styles';
 
 const {width, height} = Dimensions.get('window');
 const toRadians = (angle: number) => angle * (Math.PI / 180);
@@ -275,27 +277,5 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  root: {
-    flex: 1,
-    margin: 8,
-    zIndex: 100,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  cards: {
-    flex: 1,
-    justifyContent: 'center',
-  },
-  loadingCard: {
-    padding: 16,
-    alignSelf: 'center',
-    alignItems: 'center',
-  },
-  loadingCaption: {
-    marginTop: 8,
-  },
-});
 
 export default Swiper;

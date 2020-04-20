@@ -4,11 +4,13 @@ import {Text, Button, IconProps, Icon} from '@ui-kitten/components';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {fetchRandomJokesActionAsync, Joke} from '../../store/jokes';
 import {MainStackParams} from '../../app/navigators';
-import ScreenContainer from '../../containers/ScreenContainer';
+import ScreenContainer from '../../containers/ScreenContainer/ScreenContainer';
 import {ScreenNavigationProp} from '../../utils/ScreenProps';
 import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
 import Swiper from '../../components/Swiper/Swiper';
+
+import styles from './PickJoke.styles';
 
 interface PickJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.PICK_JOKE> {}
@@ -43,7 +45,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   return (
     <ScreenContainer>
       <Header title="pick Joke" canGoBack={false} />
-      <Text category="h6" style={{padding: 16}}>
+      <Text category="h6" style={styles.title}>
         Select a joke to share is with you friend
       </Text>
       {jokes.jokes.length > 0 && (
@@ -57,7 +59,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
       )}
       <Button
         disabled={!activeJoke}
-        style={{margin: 8}}
+        style={styles.shareBtn}
         status="primary"
         accessoryLeft={SendIcon}
         onPress={() => handleOnShareJoke(activeJoke)}>
