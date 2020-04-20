@@ -1,7 +1,9 @@
 import React, {useState, useEffect} from 'react';
+import {View} from 'react-native';
 import {useSelector, useDispatch} from 'react-redux';
-import {Button, Icon, IconProps} from '@ui-kitten/components';
+import {Button, Icon, IconProps, Spinner} from '@ui-kitten/components';
 import {validate} from 'validate.js';
+import find from 'lodash.find';
 import {ApplicationState, ApplicationDispatch} from '../../store';
 import {addFriendAction, Friend} from '../../store/friends';
 import {MainStackParams} from '../../app/navigators';
@@ -21,11 +23,20 @@ import {
   filterUnselectedFriends,
 } from '../../utils/helpers';
 
+import styles from './ShareJoke.styles';
+import {sendJokeActionAsync} from '../../store/jokes/jokes.actions';
+
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
 
 const SendIcon = (props: IconProps) => (
   <Icon {...props} name="paper-plane-outline" />
+);
+
+const LoadingIndicator = (props: IconProps) => (
+  <View style={[props.style, styles.loadingIndicator]}>
+    <Spinner size="small" />
+  </View>
 );
 
 interface SearchAndFilterInput {
@@ -43,9 +54,9 @@ interface ShareJokeScreenState {
 }
 
 const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
-  const {selectedJokeId} = route.params;
+  const {selectedJoke} = route.params;
   const dispatch = useDispatch<ApplicationDispatch>();
-  const {friends} = useSelector((state: ApplicationState) => state);
+  const {friends, jokes} = useSelector((state: ApplicationState) => state);
 
   const [state, setState] = useState<ShareJokeScreenState>({
     showFilterModal: false,
@@ -181,6 +192,15 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     }));
   };
 
+  const handleSendJoke = () => {
+    dispatch(
+      sendJokeActionAsync.request({
+        friends: filterSelectedFriends(state.friendsData),
+        joke: selectedJoke,
+      }),
+    );
+  };
+
   return (
     <>
       <ScreenContainer>
@@ -213,8 +233,13 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
         ) : (
           <FriendsList friends={state.friendsData} />
         )}
-        <Button style={{margin: 8}} status="primary" accessoryLeft={SendIcon}>
-          Send Jokes
+        <Button
+          style={{margin: 8}}
+          status="primary"
+          disabled={jokes.loading.sendJoke}
+          onPress={handleSendJoke}
+          accessoryLeft={jokes.loading.sendJoke ? LoadingIndicator : SendIcon}>
+          {jokes.loading.sendJoke ? 'Send Joke' : 'Sending Joke'}
         </Button>
       </ScreenContainer>
       {state.showFilterModal && (

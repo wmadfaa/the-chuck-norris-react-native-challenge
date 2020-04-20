@@ -10,13 +10,13 @@ export interface SwiperCardProps {
   joke: Joke;
   likeOpacity?: Animated.Node<number> | number;
   nopeOpacity?: Animated.Node<number> | number;
-  onPress?(jokeId: Joke['id']): void;
+  onPress?(jokeId: Joke): void;
 }
 
 const SwiperCard: React.FC<SwiperCardProps> = ({joke, onPress}) => {
   const handleOnPress = () => {
     if (onPress) {
-      onPress(joke.id);
+      onPress(joke);
     }
   };
   return (

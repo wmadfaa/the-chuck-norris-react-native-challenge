@@ -25,7 +25,7 @@ function* sendJokeSaga({
   const controller = new AbortController();
   const {signal} = controller;
   try {
-    yield call(sendJoke, map(friends, 'email'), joke.joke, signal);
+    yield call(sendJoke, map(friends, 'email'), joke, signal);
     yield put(JokesActions.sendJokeActionAsync.success());
   } catch (err) {
     yield put(JokesActions.sendJokeActionAsync.failure(err));

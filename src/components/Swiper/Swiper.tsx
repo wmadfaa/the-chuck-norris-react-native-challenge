@@ -76,8 +76,8 @@ export interface SwiperProps {
   jokes: Joke[];
   onEndRetched(): void;
   loading?: boolean;
-  onSelect(jokeId: string): void;
-  onChange(activeJokeId: string): void;
+  onSelect(joke: Joke): void;
+  onChange(activeJoke: Joke): void;
 }
 
 interface SwiperState {
@@ -126,7 +126,7 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
 
   componentDidMount() {
     if (this.state.jokes.length > 0) {
-      this.props.onChange(this.state.jokes[0].id);
+      this.props.onChange(this.state.jokes[0]);
     }
   }
 
@@ -207,7 +207,7 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
       this.init();
       this.endRetched();
     }
-    this.props.onChange(this.state.jokes[0].id);
+    this.props.onChange(this.state.jokes[0]);
   };
 
   endRetched = () => {

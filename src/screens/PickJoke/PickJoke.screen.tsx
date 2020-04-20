@@ -20,7 +20,7 @@ const SendIcon = (props: IconProps) => <Icon {...props} name="share-outline" />;
 const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   const dispatch = useDispatch<ApplicationDispatch>();
   const {jokes} = useSelector((state: ApplicationState) => state);
-  const [activeJoke, setActiveJoke] = useState<Joke['id']>('');
+  const [activeJoke, setActiveJoke] = useState<Joke>();
 
   useEffect(() => {
     if (jokes.jokes.length == 0) {
@@ -32,12 +32,8 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
     dispatch(fetchRandomJokesActionAsync.request());
   };
 
-  const handleOnShareJoke = (jokeId: Joke['id']) => {
-    navigation.navigate(ROUTES.SHARE_JOKE, {selectedJokeId: jokeId});
-  };
-
-  const handleOnActiveJokeChanged = (jokeId: Joke['id']) => {
-    setActiveJoke(jokeId);
+  const handleOnShareJoke = ({joke}: Joke) => {
+    navigation.navigate(ROUTES.SHARE_JOKE, {selectedJoke: joke});
   };
 
   return (
@@ -52,7 +48,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
           onEndRetched={handleLoadMoreJokes}
           loading={jokes.loading['fetchJokes']}
           onSelect={handleOnShareJoke}
-          onChange={handleOnActiveJokeChanged}
+          onChange={setActiveJoke}
         />
       )}
       <Button
@@ -60,7 +56,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
         style={styles.shareBtn}
         status="primary"
         accessoryLeft={SendIcon}
-        onPress={() => handleOnShareJoke(activeJoke)}>
+        onPress={() => activeJoke && handleOnShareJoke(activeJoke)}>
         Share
       </Button>
     </ScreenContainer>

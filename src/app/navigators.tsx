@@ -9,7 +9,7 @@ import PickJokeScreen from '../screens/PickJoke/PickJoke.screen';
 import {Joke} from '../store/jokes/jokes.types';
 
 export type MainStackParams = {
-  [ROUTES.SHARE_JOKE]: {selectedJokeId: Joke['id']};
+  [ROUTES.SHARE_JOKE]: {selectedJoke: Joke['joke']};
   [ROUTES.PICK_JOKE]: undefined;
 };
 

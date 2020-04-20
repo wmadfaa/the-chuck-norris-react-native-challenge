@@ -17,4 +17,4 @@ export const sendJokeActionAsync = createAsyncAction(
   JokesActionTypes.SEND_JOKE_SUCCESS,
   JokesActionTypes.SEND_JOKE_FAILURE,
   JokesActionTypes.SEND_JOKE_CANCEL,
-)<{friends: Friend[]; joke: Joke}, undefined, Error, undefined>();
+)<{friends: Friend[]; joke: Joke['joke']}, undefined, Error, undefined>();

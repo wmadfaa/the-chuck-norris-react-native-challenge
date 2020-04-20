@@ -24,55 +24,85 @@ const reducer: Reducer<JokesState, JokesAction> = (
 ) => {
   switch (action.type) {
     case JokesActionTypes.FETCH_RANDOM_JOKES_REQUEST: {
-      return merge(state, {
-        loading: {fetchJokes: true},
-        errors: {fetchJokes: undefined},
-      });
+      return merge(
+        {...state},
+        {
+          loading: {fetchJokes: true},
+          errors: {fetchJokes: undefined},
+        },
+      );
     }
     case JokesActionTypes.FETCH_RANDOM_JOKES_SUCCESS: {
-      return merge(state, {
-        jokes: uniqBy([...state.jokes, ...action.payload], 'id'),
-        loading: {fetchJokes: false},
-      });
+      return merge(
+        {...state},
+        {
+          jokes: uniqBy([...state.jokes, ...action.payload], 'id'),
+          loading: {fetchJokes: false},
+        },
+      );
     }
     case JokesActionTypes.FETCH_RANDOM_JOKES_FAILURE: {
-      return merge(state, {
-        loading: {fetchJokes: false},
-        errors: {fetchJokes: action.payload},
-      });
+      return merge(
+        {...state},
+        {
+          loading: {fetchJokes: false},
+          errors: {fetchJokes: action.payload},
+        },
+      );
     }
     case JokesActionTypes.FETCH_RANDOM_JOKES_CANCEL: {
-      return merge(state, {
-        loading: {fetchJokes: false},
-      });
+      return merge(
+        {...state},
+        {
+          loading: {fetchJokes: false},
+        },
+      );
     }
 
     case JokesActionTypes.SEND_JOKE_REQUEST: {
-      return merge(state, {
-        loading: {sendJoke: true},
-        errors: {sendJoke: undefined},
-      });
+      const nextState = merge(
+        {...state},
+        {
+          loading: {sendJoke: true},
+          errors: {sendJoke: undefined},
+        },
+      );
+      console.log(nextState);
+      return nextState;
     }
     case JokesActionTypes.SEND_JOKE_SUCCESS: {
-      return merge(state, {
-        loading: {sendJoke: false},
-      });
+      const nextState = merge(
+        {...state},
+        {
+          loading: {sendJoke: false},
+        },
+      );
+      return nextState;
     }
     case JokesActionTypes.SEND_JOKE_FAILURE: {
-      return merge(state, {
-        loading: {sendJoke: false},
-        errors: {sendJoke: action.payload},
-      });
+      return merge(
+        {...state},
+        {
+          loading: {sendJoke: false},
+          errors: {sendJoke: action.payload},
+        },
+      );
     }
     case JokesActionTypes.SEND_JOKE_CANCEL: {
-      return merge(state, {
-        loading: {sendJoke: false},
-      });
+      return merge(
+        {...state},
+        {
+          loading: {sendJoke: false},
+        },
+      );
     }
     case JokesActionTypes.REMOVE_ERROR: {
-      return merge(state, {
-        errors: {[action.payload]: undefined},
-      });
+      return merge(
+        {...state},
+        {
+          errors: {[action.payload]: undefined},
+        },
+      );
     }
     default: {
       return state;
