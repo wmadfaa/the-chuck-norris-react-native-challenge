@@ -8,7 +8,7 @@ import ScreenContainer from '../../containers/ScreenContainer/ScreenContainer';
 import {ScreenNavigationProp} from '../../utils/ScreenProps';
 import ROUTES from '../../configs/routes';
 import Header from '../../components/Header/Header';
-import Swiper from '../../components/Swiper/Swiper';
+import Swiper, {LoadingCard} from '../../components/Swiper/Swiper';
 
 import styles from './PickJoke.styles';
 
@@ -45,14 +45,16 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
           swipe the jokes cards to left/right to select the next joke
         </Text>
       </Layout>
-      {jokes.jokes.length > 0 && (
+      {jokes.jokes.length > 0 ? (
         <Swiper
-          jokes={[...jokes.jokes]}
+          jokes={jokes.jokes}
           onEndRetched={handleLoadMoreJokes}
-          loading={jokes.loading['fetchJokes']}
+          loading={jokes.loading.fetchJokes}
           onSelect={handleOnShareJoke}
           onChange={setActiveJoke}
         />
+      ) : (
+        <LoadingCard />
       )}
       <Button
         disabled={!activeJoke}

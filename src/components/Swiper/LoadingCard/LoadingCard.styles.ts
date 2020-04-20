@@ -8,8 +8,12 @@ export default StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  cards: {
-    flex: 1,
-    justifyContent: 'center',
+  loadingCard: {
+    padding: 16,
+    alignSelf: 'center',
+    alignItems: 'center',
+  },
+  loadingCaption: {
+    marginTop: 8,
   },
 });

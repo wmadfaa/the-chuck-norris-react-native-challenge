@@ -4,6 +4,7 @@ import {Layout, Spinner, Text} from '@ui-kitten/components';
 import {PanGestureHandler, State} from 'react-native-gesture-handler';
 import Animated from 'react-native-reanimated';
 import SwiperCard from './SwiperCard/SwiperCard';
+import LoadingCard from './LoadingCard/LoadingCard';
 import {Joke} from '../../store/jokes/jokes.types';
 
 import styles from './Swiper.styles';
@@ -214,15 +215,6 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
     this.props.onEndRetched();
   };
 
-  renderLoadingCard = () => (
-    <Layout style={styles.loadingCard} level="3">
-      <Spinner size="giant" />
-      <Text category="c2" style={styles.loadingCaption}>
-        ...loading the jokes
-      </Text>
-    </Layout>
-  );
-
   render() {
     const {onGestureEvent, translateX, translateY} = this;
     const {
@@ -253,11 +245,13 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
       <Layout style={styles.cards} level="2">
         {!this.props.loading ? (
           <Layout style={styles.root}>
-            {jokes.length >= 1
-              ? jokes
-                  .reverse()
-                  .map((joke) => <SwiperCard key={joke.id} {...{joke}} />)
-              : this.renderLoadingCard()}
+            {jokes.length >= 1 ? (
+              jokes
+                .reverse()
+                .map((joke) => <SwiperCard key={joke.id} {...{joke}} />)
+            ) : (
+              <LoadingCard />
+            )}
             <PanGestureHandler
               onHandlerStateChange={onGestureEvent}
               {...{onGestureEvent}}>
@@ -271,11 +265,13 @@ class Swiper extends React.Component<SwiperProps, SwiperState> {
             </PanGestureHandler>
           </Layout>
         ) : (
-          this.renderLoadingCard()
+          <LoadingCard />
         )}
       </Layout>
     );
   }
 }
+
+export {LoadingCard};
 
 export default Swiper;
