@@ -22,8 +22,6 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
   const {jokes} = useSelector((state: ApplicationState) => state);
   const [activeJoke, setActiveJoke] = useState<Joke['id']>('');
 
-  console.log(jokes);
-
   useEffect(() => {
     if (jokes.jokes.length == 0) {
       dispatch(fetchRandomJokesActionAsync.request());
@@ -52,7 +50,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
         <Swiper
           jokes={[...jokes.jokes]}
           onEndRetched={handleLoadMoreJokes}
-          loading={jokes.isLoading}
+          loading={jokes.loading['fetchJokes']}
           onSelect={handleOnShareJoke}
           onChange={handleOnActiveJokeChanged}
         />

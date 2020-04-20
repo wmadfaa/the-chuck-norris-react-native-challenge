@@ -1,6 +1,7 @@
 import {call, put, all, takeEvery, cancelled} from 'redux-saga/effects';
+import map from 'lodash.map';
 import * as JokesActions from './jokes.actions';
-import {fetchRandomJokes} from './jokes.api';
+import {fetchRandomJokes, sendJoke} from './jokes.api';
 
 function* fetchRandomJokesSaga() {
   const controller = new AbortController();
@@ -18,12 +19,31 @@ function* fetchRandomJokesSaga() {
   }
 }
 
+function* sendJokeSaga({
+  payload: {friends, joke},
+}: ReturnType<typeof JokesActions.sendJokeActionAsync.request>) {
+  const controller = new AbortController();
+  const {signal} = controller;
+  try {
+    yield call(sendJoke, map(friends, 'email'), joke.joke, signal);
+    yield put(JokesActions.sendJokeActionAsync.success());
+  } catch (err) {
+    yield put(JokesActions.sendJokeActionAsync.failure(err));
+  } finally {
+    if (yield cancelled()) {
+      controller.abort();
+      yield put(JokesActions.sendJokeActionAsync.cancel());
+    }
+  }
+}
+
 function* rootSaga() {
   yield all([
     takeEvery(
       JokesActions.fetchRandomJokesActionAsync.request,
       fetchRandomJokesSaga,
     ),
+    takeEvery(JokesActions.sendJokeActionAsync.request, sendJokeSaga),
   ]);
 }
 
