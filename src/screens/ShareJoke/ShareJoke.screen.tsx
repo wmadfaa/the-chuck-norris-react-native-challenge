@@ -12,8 +12,12 @@ import Header from '../../components/Header/Header';
 import FriendsList from '../../components/FriendsList/FriendsList';
 import SearchAnFilterBar from '../../components/SearchAnFilterBar/SearchAnFilterBar';
 import AddNewEmailInfoCard from './components/AddNewEmailInfoCard/AddNewEmailInfoCard';
-import FilterModal from './components/SortModal/FilterModal';
-import SortModal from './components/FilterModal/FilterModal';
+import SortModal, {SortOptions} from './components/SortModal/SortModal';
+import FilterModal, {FilterOptions} from './components/FilterModal/FilterModal';
+import {
+  sortFriendsByEmailDomainName,
+  sortFriendsByEmailHostName,
+} from '../../utils/helpers';
 
 interface ShareJokeScreenProps
   extends ScreenNavigationProp<MainStackParams, ROUTES.SHARE_JOKE> {}
@@ -111,17 +115,39 @@ const ShareJokeScreen: React.FC<ShareJokeScreenProps> = ({route}) => {
     setState((prev) => ({...prev, showSortModal: !prev.showSortModal}));
   };
 
-  const handleOnSortChange = (filterValue: string) => {
-    setState((prev) => ({...prev, filterValue}));
+  const handleOnSortChange = (sortValue: string) => {
+    setState((prev) => ({...prev, sortValue}));
   };
 
   const handleOnFilterChange = (filterValue: string) => {
     setState((prev) => ({...prev, filterValue}));
   };
 
-  const handleSort = () => {};
+  const handleSort = () => {
+    let sortedFriendsData: Friend[];
+    switch (state.sortValue) {
+      case SortOptions.SORT_BY_EMAIL_DOMAIN: {
+        sortedFriendsData = sortFriendsByEmailDomainName([...friends]);
+        break;
+      }
+      case SortOptions.SORT_BY_EMAIL_HOST: {
+        sortedFriendsData = sortFriendsByEmailHostName([...friends]);
+        break;
+      }
+      default: {
+        sortedFriendsData = [...friends];
+      }
+    }
+    setState((prev) => ({
+      ...prev,
+      friendsData: sortedFriendsData,
+      showSortModal: false,
+    }));
+  };
 
-  const handleResetSort = () => {};
+  const handleResetSort = () => {
+    setState((prev) => ({...prev, friendsData: [...friends]}));
+  };
 
   const handleFilter = () => {};
 

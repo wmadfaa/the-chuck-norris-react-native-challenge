@@ -1,7 +1,7 @@
 import React from 'react';
 import FilterOrSortModal from '../../../../components/FilterOrSortModal/FilterOrSortModal';
 
-export interface FilterModalProps {
+export interface SortModalProps {
   onClose(): void;
   onReset(): void;
   onApply(): void;
@@ -9,7 +9,12 @@ export interface FilterModalProps {
   selectedValue?: string;
 }
 
-const FilterModal: React.FC<FilterModalProps> = ({
+export enum SortOptions {
+  SORT_BY_EMAIL_DOMAIN = 'sort by email domain name',
+  SORT_BY_EMAIL_HOST = 'sort by emails host name',
+}
+
+const SortModal: React.FC<SortModalProps> = ({
   onClose,
   onReset,
   onApply,
@@ -19,8 +24,11 @@ const FilterModal: React.FC<FilterModalProps> = ({
   return (
     <FilterOrSortModal
       onClose={onClose}
-      title="Filter E-mails"
-      options={['filter unselected emails', 'filter selected emails']}
+      title="Sort E-mails"
+      options={[
+        SortOptions.SORT_BY_EMAIL_DOMAIN,
+        SortOptions.SORT_BY_EMAIL_HOST,
+      ]}
       secondaryActionButtonLabel="Reset"
       primaryActionButtonLabel="Apply"
       onSecondaryActionButtonPress={onReset}
@@ -31,4 +39,4 @@ const FilterModal: React.FC<FilterModalProps> = ({
   );
 };
 
-export default FilterModal;
+export default SortModal;
