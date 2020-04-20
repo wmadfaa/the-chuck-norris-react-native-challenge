@@ -47,7 +47,7 @@ const PickJokeScreen: React.FC<PickJokeScreenProps> = ({navigation}) => {
       </Layout>
       {jokes.jokes.length > 0 ? (
         <Swiper
-          jokes={jokes.jokes}
+          jokes={[...jokes.jokes]}
           onEndRetched={handleLoadMoreJokes}
           loading={jokes.loading.fetchJokes}
           onSelect={handleOnShareJoke}
